@@ -21,6 +21,8 @@ function i(){
     s=10;
     //set to 0 if we've touched the ground
     r=1;
+    // frame number/score
+    f=0;
 }
 i();
 
@@ -31,7 +33,6 @@ setInterval(function(){
     // clear the canvas TODO shorten
     c.fillStyle="#63697C";
     c.fillRect(0,0,976,336);
-    c.fillStyle=p;
     // Update player position
     if(j>0){v-=3;r=1;j--}
     v++;y+=v;
@@ -43,7 +44,10 @@ setInterval(function(){
 
         c.save();
         c.translate(b.x,b.y);
+        c.fillStyle=p;
         c.fillRect(0,0,b.w,336);
+        c.fillStyle="#FFF";
+        c.fillRect(-1,0,b.w+2,2);
         c.restore();
 
         if(40>b.x&&40<b.x+b.w&&y>b.y&&y<b.y+336){if(y-v<=b.y){y=b.y;r=0;v=0}else{i();break;}}
@@ -58,5 +62,10 @@ setInterval(function(){
     }
     c.fillStyle="#000";
     c.fillRect(40,y-10,10,10);
+    c.fillStyle="#FFF";
+    c.font = '16px sans-serif';
+    c.textAlign = 'right';
+    c.textBaseline = 'top';
+    c.fillText(Math.round((f+=s)/50)+'m', 970, 5);
     s+=0.02;
 }, 30);
