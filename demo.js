@@ -10,8 +10,10 @@ y=150;
 v=0;
 // gravity
 g=1;
+// current speed
+s=10;
 // jumping control
-j=0;d.onkeydown=function(){j=10};d.onkeyup=function(){j=0};
+j=0;d.onkeydown=function(){if(r==0)j=5};d.onkeyup=function(){j=0};
 //set to 0 if we've touched the ground
 r=1;
 function m(n,x){return Math.round(Math.random()*(x-n))+n}
@@ -19,18 +21,18 @@ setInterval(function(){
     // clear the canvas TODO shorten
     e.height++;e.height--;
     // Update player position
-    console.log(j);
-    if(j>0&&r==0){y-=3;j--;r=1}
-    //v+=g;
-    y+=1;
+    if(j>0){v-=3;r=1;j--}
+    v+=g;
+    y+=v;
+    r=1;
     // move and draw the buildings
     for(b in o){
         b=o[b];
-        b.x-=10;
+        b.x-=s;
         c.fillRect(b.x,b.y,b.w,336);
         if(40>b.x&&40<b.x+b.w&&y>b.y){y=b.y;r=0;v=0}
-        if(b.x+b.w<976&&!b.n){console.log(b);b.n=1;o.push({x:976,y:b.y+m(-5,20),w:m(50,200)});}
+        if(!b.n&&b.x+b.w<m(970-(20*s),970)){b.n=1;o.push({x:976,y:b.y-m(-40,40),w:m(100,976)});}
     }
     c.fillRect(40,y-10,10,10);
-    j=0;
-}, 50);
+    s+=0.01;
+}, 30);
