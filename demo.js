@@ -1,8 +1,8 @@
 d=document;
+d.body.style.backgroundColor="#4D4D59";
 // get the canvas
 (e=d.getElementById('c')).width=976;e.height=336;c=e.getContext('2d');
-c.fillStyle="#000";
-
+p=new Image;p.src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAABAAgMAAAAG4J09AAAAAXNSR0IArs4c6QAAAAxQTFRFNTU9TU1ZsLC/////Gflk4wAAAB1JREFUKM9jWgUFTAxQMMoYMMZqMBjM7vkPBkgiAA3TE88vXHfUAAAAAElFTkSuQmCC";
 function i(){
     // array of buildings
     o=[{x:0,y:200,w:900},{x:0,y:-220,w:900,n:1}];
@@ -23,6 +23,7 @@ function m(n,x){return Math.round(Math.random()*(x-n))+n}
 setInterval(function(){
     // clear the canvas TODO shorten
     e.height++;e.height--;
+    c.fillStyle=c.createPattern(p, 'repeat');;
     // Update player position
     if(j>0){v-=3;r=1;j--}
     v++;y+=v;
@@ -42,6 +43,7 @@ setInterval(function(){
             if(m(0,10)==0) o.push({x:n.x,y:n.y-420,w:n.w,n:1});
         }
     }
+    c.fillStyle="#000";
     c.fillRect(40,y-10,10,10);
     s+=0.02;
 }, 30);
