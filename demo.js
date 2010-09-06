@@ -2,6 +2,7 @@ d=document;
 d.body.style.backgroundColor="#4D4D59";
 // get the canvas
 (e=d.getElementById('c')).width=976;e.height=336;c=e.getContext('2d');
+e.style.border="5px inset #646A7D";
 p=new Image;p.src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAABAAgMAAAAG4J09AAAAAXNSR0IArs4c6QAAAAxQTFRFNTU9TU1ZsLC/////Gflk4wAAAB1JREFUKM9jWgUFTAxQMMoYMMZqMBjM7vkPBkgiAA3TE88vXHfUAAAAAElFTkSuQmCC";
 function i(){
     // array of buildings
@@ -32,7 +33,10 @@ setInterval(function(){
     for(b in o){
         b=o[b];
         b.x-=s;
-        c.fillRect(b.x,b.y,b.w,336);
+        c.save();
+        c.translate(b.x,b.y);
+        c.fillRect(0,0,b.w,336);
+        c.restore();
         if(40>b.x&&40<b.x+b.w&&y>b.y&&y<b.y+336){if(y-v<=b.y){y=b.y;r=0;v=0}else{i();break;}}
         if(y>336){i();break;}
         if(!b.n&&b.x+b.w<970){
