@@ -1,9 +1,15 @@
 d=document;
 d.body.style.backgroundColor="#4D4D59";
 // get the canvas
-(e=d.getElementById('c')).width=976;e.height=336;c=e.getContext('2d');
+e=d.getElementById('c');c=e.getContext('2d');
+
+// Create the building pattern
+e.height=64;e.width=32;c.fillStyle="#BBC";c.fillRect(0,0,32,64);c.fillStyle="#4D4D59";c.fillRect(4,44,24,20);
+p=c.createPattern(e, 'repeat');
+
 e.style.border="5px inset #646A7D";
-p=new Image;p.src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAABAAgMAAAAG4J09AAAAAXNSR0IArs4c6QAAAAxQTFRFNTU9TU1ZsLC/////Gflk4wAAAB1JREFUKM9jWgUFTAxQMMoYMMZqMBjM7vkPBkgiAA3TE88vXHfUAAAAAElFTkSuQmCC";
+e.width=976;e.height=336;
+
 function i(){
     // array of buildings
     o=[{x:0,y:200,w:900},{x:0,y:-220,w:900,n:1}];
@@ -23,8 +29,9 @@ j=0;d.onkeydown=function(){if(r==0)j=5};d.onkeyup=function(){j=0};
 function m(n,x){return Math.round(Math.random()*(x-n))+n}
 setInterval(function(){
     // clear the canvas TODO shorten
-    e.height++;e.height--;
-    c.fillStyle=c.createPattern(p, 'repeat');;
+    c.fillStyle="#63697C";
+    c.fillRect(0,0,976,336);
+    c.fillStyle=p;
     // Update player position
     if(j>0){v-=3;r=1;j--}
     v++;y+=v;
@@ -33,10 +40,12 @@ setInterval(function(){
     for(b in o){
         b=o[b];
         b.x-=s;
+
         c.save();
         c.translate(b.x,b.y);
         c.fillRect(0,0,b.w,336);
         c.restore();
+
         if(40>b.x&&40<b.x+b.w&&y>b.y&&y<b.y+336){if(y-v<=b.y){y=b.y;r=0;v=0}else{i();break;}}
         if(y>336){i();break;}
         if(!b.n&&b.x+b.w<970){
