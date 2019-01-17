@@ -1,71 +1,68 @@
-d=document;
-d.body.style.backgroundColor="#4D4D59";
+// js1k 2010 entry by Stuart Knightley
+// based on Canabalt, http://www.adamatomic.com/canabalt/
+
+d=document;M=Math;R=M.round;W=976;H=336;
 // get the canvas
-e=d.getElementById('c');c=e.getContext('2d');
-
-// Create the building pattern
-e.height=64;e.width=32;c.fillStyle="#BBC";c.fillRect(0,0,32,64);c.fillStyle="#4D4D59";c.fillRect(4,44,24,20);
-p=c.createPattern(e, 'repeat');
-
-e.style.border="5px inset #646A7D";
-e.width=976;e.height=336;
-
+e=d.body.children.c;c=e.getContext('2d');e.width=W;e.height=H;
+c.font = '16px sans';
+g=c.createLinearGradient(l=t=f=0,0,0,H);g.addColorStop(0,'#E83');g.addColorStop(1,'#FD6');
 function i(){
-    // array of buildings
-    o=[{x:0,y:200,w:900},{x:0,y:-220,w:900,n:1}];
+    // l = last score
+    l=R(f/50);
+    // t = top score
+    t = M.max(t,l);
+    // array of buildings (and some var definitions)
+    // f = frame number/score
+    // v = player y velocity
+    // r = set to 0 if we've touched the ground
+    // j = how long left of the current jump there is
+    o=[{x:j=f=v=0,y:200,w:W},{x:0,y:-220,w:W,n:r=1}];
     // Player y (x is 40)
     y=150;
-    // Player y velocity
-    v=0;
     // current speed
     s=10;
-    //set to 0 if we've touched the ground
-    r=1;
-    // frame number/score
-    f=0;
 }
 i();
 
 // jumping control
-j=0;d.onkeydown=function(){if(r==0)j=5};d.onkeyup=function(){j=0};
-function m(n,x){return Math.round(Math.random()*(x-n))+n}
+d.onkeydown=function(){if(r==0)j=5};d.onkeyup=function(){j=0};
+function m(n,x){return R(M.random()*(x-n))+n}
 setInterval(function(){
-    // clear the canvas TODO shorten
-    c.fillStyle="#63697C";
-    c.fillRect(0,0,976,336);
+    // clear the canvas
+    c.fillStyle=g;
+    // Set r to non-zero
+    c.fillRect(0,0,r=W,H);
     // Update player position
     if(j>0){v-=3;r=1;j--}
     v++;y+=v;
-    r=1;
     // move and draw the buildings
     for(b in o){
         b=o[b];
         b.x-=s;
 
-        c.save();
-        c.translate(b.x,b.y);
-        c.fillStyle=p;
-        c.fillRect(0,0,b.w,336);
-        c.fillStyle="#FFF";
-        c.fillRect(-1,0,b.w+2,2);
-        c.restore();
+        c.fillStyle=(b.b)?'#444':'#000';
+        c.fillRect(b.x,b.y,b.w,H);
 
-        if(40>b.x&&40<b.x+b.w&&y>b.y&&y<b.y+336){if(y-v<=b.y){y=b.y;r=0;v=0}else{i();break;}}
-        if(y>336){i();break;}
+        // Check if player is colliding
+        if(40>b.x&&40<b.x+b.w&&y>b.y&&y<b.y+H) {
+            // Are we on the top/ground
+            if(y-v<=b.y){y=b.y;r=0;v=0}
+            // or colliding?
+            else{if(!b.b){i();break;}else s*=0.8}
+        }
+        // If off bottom, stop
+        if(y>H){i();break;}
+        // Check if we need to create a new building
         if(!b.n&&b.x+b.w<970){
-            b.n=1;
-            n = {x:976+m(0,22*s),y:b.y-m(-40,40),w:m(100,976)};
-            o.push(n);
-            // Sometimes we want a roof
-            if(m(0,10)==0) o.push({x:n.x,y:n.y-420,w:n.w,n:1});
+            o.push(n = {x:b.n=W+m(0,22*s),y:b.y-m(-40,40),w:m(200,999)});
+            // Sometimes we want a roof... (m(...)==0)
+            if(!m(0,10)) o.push({x:n.x,y:n.y-420,w:n.w,n:1});
+            // ...and occassionally up to 3 boxes. Add to the front of the array
+            // so that the tallness is drawn behind the buildings
+            for(z=m(-3,3);z-->0;) o.unshift({x:m(n.x,n.x+n.w-20),y:n.y-20,w:20,n:1,b:1});
         }
     }
-    c.fillStyle="#000";
+    // Draw player
     c.fillRect(40,y-10,10,10);
-    c.fillStyle="#FFF";
-    c.font = '16px sans-serif';
-    c.textAlign = 'right';
-    c.textBaseline = 'top';
-    c.fillText(Math.round((f+=s)/50)+'m', 970, 5);
-    s+=0.02;
+    c.fillText('Hi '+t+'m Last '+l+'m | '+R((f+=s+=0.05)/50)+'m', 750, 20);
 }, 30);
